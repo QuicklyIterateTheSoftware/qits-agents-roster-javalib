@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- qits-agents-roster: the qits project's own declaration of its long-running agents (epic
+         qits-2517), a ServiceLoader implementation of eu.wohlben.qits:qits-agents-contract.
+         qits-agents-service (epic qits-2518) puts this jar on its class path, loads the roster and
+         keeps one agent running per declaration.
+
+         ONE MODULE AT THE ROOT: this repo produces one jar, so this pom is the parent and the module
+         at once. -->
+    <groupId>eu.wohlben.qits</groupId>
+    <artifactId>qits-agents-roster</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>qits-agents-roster</name>
+
+    <properties>
+        <maven.compiler.release>25</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <quarkus.platform.version>3.40.1</quarkus.platform.version>
+
+        <!-- Passed by the maven-library release recipe; also the <repositories> URL below resolves
+             from it when building outside the recipe. -->
+        <qits.maven.repository.url>https://registry.qits.wohlben.eu/artifacts/maven/maven</qits.maven.repository.url>
+
+        <!-- The qits-agents-contract version this roster is built against: a qits-maintenance bump
+             pin, like any other dependency on the estate. Written by hand once, because
+             qits-maintenance bumps only a pin that already exists; every later contract release
+             reaches this line as an ordinary maintenance bump. -->
+        <qits.agents-contract.version>2026.1122.201825</qits.agents-contract.version>
+
+        <compiler-plugin.version>3.15.0</compiler-plugin.version>
+        <surefire-plugin.version>3.5.4</surefire-plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.wohlben.qits</groupId>
+            <artifactId>qits-agents-contract</artifactId>
+            <version>${qits.agents-contract.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- The platform's maven registry, declared because this reactor resolves a dependency that is
+         not on Central: the contract jar. Inside a CI step or the Dockerfile's builder stage,
+         .qits-maven-settings.xml redirects `qits-maven` to $QITS_MAVEN_REPOSITORY_URL, derived from
+         QITS_DOMAIN; the literal below is the public host, which answers 401 anonymously — build
+         with `-s .qits-maven-settings.xml` and the QITS_MAVEN_* variables it reads. -->
+    <repositories>
+        <repository>
+            <id>qits-maven</id>
+            <url>${qits.maven.repository.url}</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
+                <configuration>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire-plugin.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

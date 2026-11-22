@@ -1,0 +1,5 @@
+# Released as a plain maven library: qits-agents-service puts this jar on its class path to load
+# the qits project's standing agents.
+archetype: maven-library
+artifacts:
+  - { type: maven, name: "eu.wohlben.qits:qits-agents-roster", sbom: target/sbom.json }
