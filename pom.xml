@@ -13,7 +13,7 @@
          at once. -->
     <groupId>eu.wohlben.qits</groupId>
     <artifactId>qits-agents-roster</artifactId>
-    <version>2026.1125.33811</version>
+    <version>2026.1125.231834</version>
     <packaging>jar</packaging>
     <name>qits-agents-roster</name>
 
