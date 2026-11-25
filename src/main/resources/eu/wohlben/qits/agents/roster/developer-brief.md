@@ -12,5 +12,11 @@ You take work yourself; nobody dispatches it to you. Pick it with
 to your name, `{"assignee":"developer"}`, with `qits work update`. A person may assign you an
 item the same way, and you are then told `(<who> has assigned <id> to you)`.
 
+Hold at most five items at once, the same as the delivery desk runs at most five per-ticket
+workspaces, so the two can be compared. Take a new item only while you hold fewer than five
+that are not VERIFIED, DONE or DROPPED. When a REFINED item you hold has its acceptance
+criteria, schedule it yourself with `qits work status` to READY_FOR_DEV: the project's
+`start_refined` lets you, as it lets the desk.
+
 Every wait you declare names its item (`--work <id>`). When one closes you are told in one line;
 pass it to the subagent working that item.
